@@ -2,24 +2,25 @@ package com.rioc.ws.services.address;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rioc.ws.exceptions.ApiException;
 import com.rioc.ws.models.dto.AddressDto;
+import org.springframework.http.HttpStatus;
 
 import java.io.*;
 import java.net.*;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AddressService {
-    // TODO validation de l'address avec l'api
-    // https://adresse.data.gouv.fr/api-doc/adresse
-    private String baseUrl = "https://api-adresse.data.gouv.fr/search/";
+    private final String baseUrl = "https://api-adresse.data.gouv.fr/search/";
 
     boolean isValidAddress(AddressDto addressDto){
-        // todo
-        getData(addressDto.getCityName(), addressDto.getZipCode(), addressDto.getStreetAddress());
-        return false;
+        JsonNode data = getData(addressDto.getCityName(), addressDto.getZipCode(), addressDto.getStreetAddress());
+        System.out.println(data.get("features").size());
+        return data.get("features").size() > 0;
     }
 
     private JsonNode getData(String city, int zipCode, String street_address){
@@ -28,6 +29,8 @@ public class AddressService {
         HttpResponse<JsonNode> response = null; // To delete
         // Url
         URL url = null;
+        // conn
+        HttpURLConnection con = null;
         try {
             StringBuilder apiUrl = new StringBuilder(this.baseUrl);
             apiUrl.append("?q=");
@@ -35,31 +38,27 @@ public class AddressService {
             apiUrl.append("&postcode=").append(zipCode);
             System.out.println("apiUrl = " + apiUrl);
             url = new URL(apiUrl.toString());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return (JsonNode) response;
-        }
-        HttpURLConnection con = null;
-        try {
             con = (HttpURLConnection) url.openConnection();
             con.setRequestMethod("GET");
         } catch (IOException e) {
             e.printStackTrace();
-            return (JsonNode) response;
+            throw new ApiException("Issue when validating the address please come back later.", HttpStatus.SERVICE_UNAVAILABLE);
         }
 
-
+        // Has to be a good response
         try {
             int status = con.getResponseCode();
             System.out.println("status = " + status);
             if (status > 300){
                 System.out.println("Erreur dans la requete.");
-                return (JsonNode) response;
+                throw new ApiException("Issue when validating the address please come back later.", HttpStatus.SERVICE_UNAVAILABLE);
             }
         } catch (IOException e) {
             e.printStackTrace();
+            throw new ApiException("Issue when validating the address please come back later.", HttpStatus.SERVICE_UNAVAILABLE);
         }
-        // Get content
+
+        // Checking content
         StringBuilder raw_response = new StringBuilder();
         try(BufferedReader br = new BufferedReader(
                 new InputStreamReader(con.getInputStream(), StandardCharsets.UTF_8))) {
@@ -71,10 +70,10 @@ public class AddressService {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode obj = mapper.readTree(raw_response.toString());
             System.out.println("actualObj = " + obj);
-            obj.get("features");
+            return obj;
         } catch (IOException e) {
             e.printStackTrace();
+            throw new ApiException("Issue when validating the address please come back later.", HttpStatus.SERVICE_UNAVAILABLE);
         }
-        return (JsonNode) response;
     }
 }

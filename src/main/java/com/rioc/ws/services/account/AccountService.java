@@ -29,6 +29,8 @@ public class AccountService implements IAccountService {
             System.out.println("existe déjà");
             throw new ApiException("The account arleady exist.", HttpStatus.NOT_ACCEPTABLE);
         }
+        // TODO validate address
+        // Comment utiliser le service address ?
         repository.save(mapper.accountDtoToAccount(account));
         return account;
     }
