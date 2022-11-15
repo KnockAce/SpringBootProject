@@ -8,16 +8,9 @@ import java.util.List;
 public interface IAccountService {
     public AccountDto postAccount(AccountDto account);
     public List<AccountDto> getAllAccounts();
-    public AccountDto getAccountById(int idAccount);
-    public void deleteAccountById(int idAccount);
-    public Account updateAccount(Account account);
-
-    /*
-    public default AccountDto convertToDto(Account account){
-        return new AccountDto(account.getFirstName(), account.getLastName());
-    };
-
-    public default Account convertToDao(AccountDto accountDto){
-        return new Account(0, accountDto.getFirstName(), accountDto.getLastName());
-    }*/
+    public Account getAccountById(int idAccount);
+    public Account deleteAccountById(int idAccount);
+    public Account updateAccount(AccountDto account, int idAccount);
+    public List<AccountDto> addManyAccounts(List<AccountDto> accounts);
+    public void deleteAllAccounts();
 }

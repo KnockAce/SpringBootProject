@@ -15,7 +15,7 @@ import java.util.List;
 @RestController
 public class AccountController
 {
-    private IAccountService service;
+    private final IAccountService service;
 
     public AccountController(IAccountService service)
     {
@@ -23,8 +23,8 @@ public class AccountController
         this.service = service;
     }
 
-    @PostMapping("/accounts")
-    public ResponseEntity<AccountDto> postAccount ( @Valid @RequestBody AccountDto account, BindingResult bindingResult)
+    @PostMapping("/account")
+    public ResponseEntity<AccountDto> postAccount (@Valid @RequestBody AccountDto account, BindingResult bindingResult)
     {
         if (bindingResult.hasErrors()) {
             System.out.println("La data n'est pas valide.");
@@ -34,23 +34,42 @@ public class AccountController
     }
 
     @GetMapping("/accounts")
-    public List<AccountDto> getAccounts(){
-        return service.getAllAccounts();
+    public ResponseEntity<List<AccountDto>> getAccounts(){
+        return new ResponseEntity<>(service.getAllAccounts(), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/account/{idAccount}")
-    public AccountDto getAccount(@PathVariable int idAccount){
-        return service.getAccountById(idAccount);
+    public ResponseEntity<Account> getAccount(@PathVariable int idAccount){
+        return new ResponseEntity<>(service.getAccountById(idAccount), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/account/{idAccount}")
-    public String deleteAccountFromId(@PathVariable int idAccount){
-        service.deleteAccountById(idAccount);
-        return "Deletion OK";
+    public ResponseEntity<Account> deleteAccountFromId(@PathVariable int idAccount){
+        return new ResponseEntity<>(service.deleteAccountById(idAccount), HttpStatus.ACCEPTED);
     }
 
-    @PutMapping("/account")
-    public ResponseEntity<Account> updateAccount(@RequestBody Account account){
-        return new ResponseEntity<>(service.updateAccount(account), HttpStatus.ACCEPTED);
+    @PutMapping("/account/{idAccount}")
+    public ResponseEntity<Account> updateAccount(@Valid @RequestBody AccountDto account,
+                                                    @PathVariable int idAccount, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            System.out.println("La data n'est pas valide.");
+            throw new ApiException("The input data is not correct.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(service.updateAccount(account, idAccount), HttpStatus.ACCEPTED);
+    }
+
+    @PostMapping("/accounts")
+    public ResponseEntity<List<AccountDto>> addManyAccounts(@Valid @RequestBody List<AccountDto> accounts, BindingResult bindingResult){
+        if (bindingResult.hasErrors()) {
+            System.out.println("La data n'est pas valide.");
+            throw new ApiException("The input data is not correct.", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(service.addManyAccounts(accounts), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/accounts")
+    public String deleteAllAccounts(){
+        service.deleteAllAccounts();
+        return "Deletion OK.";
     }
 }

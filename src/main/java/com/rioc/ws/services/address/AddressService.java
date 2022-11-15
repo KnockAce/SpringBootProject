@@ -5,22 +5,41 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rioc.ws.exceptions.ApiException;
 import com.rioc.ws.models.dto.AddressDto;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
 
 import java.io.*;
 import java.net.*;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
-public class AddressService {
+
+@Service
+public class AddressService implements IAddressService {
     private final String baseUrl = "https://api-adresse.data.gouv.fr/search/";
 
-    boolean isValidAddress(AddressDto addressDto){
+
+    public boolean isValidAddress(AddressDto addressDto){
+        int minScore = 65;
         JsonNode data = getData(addressDto.getCityName(), addressDto.getZipCode(), addressDto.getStreetAddress());
         System.out.println(data.get("features").size());
-        return data.get("features").size() > 0;
+        JsonNode features = data.get("features");
+        // No match found
+        if (features.size() == 0) {
+            System.out.println("No match found.");
+            return false;
+        }
+        // Getting score of results and compare it to 65
+        for (   JsonNode feature : features) {
+            System.out.println("Address : " + feature.get("properties").get("label"));
+            System.out.println(feature.get("properties").get("score"));
+            float score = feature.get("properties").get("score").floatValue();
+            if (score * 100 >= minScore){
+                System.out.println("Sufisant match found.");
+                return true;
+            }
+        }
+        System.out.println("No sufisant match found.");
+        return false;
     }
 
     private JsonNode getData(String city, int zipCode, String street_address){
@@ -29,13 +48,14 @@ public class AddressService {
         HttpResponse<JsonNode> response = null; // To delete
         // Url
         URL url = null;
-        // conn
+        // connector for http
         HttpURLConnection con = null;
         try {
             StringBuilder apiUrl = new StringBuilder(this.baseUrl);
-            apiUrl.append("?q=");
+            apiUrl.append("?q="); // Query parameter for the street address
+            // We need to encode the street address to avoid special characters and spaces
             apiUrl.append(URLEncoder.encode(street_address + " " + city, StandardCharsets.UTF_8));
-            apiUrl.append("&postcode=").append(zipCode);
+            apiUrl.append("&postcode=").append(zipCode); // Add the zip code to the query
             System.out.println("apiUrl = " + apiUrl);
             url = new URL(apiUrl.toString());
             con = (HttpURLConnection) url.openConnection();
@@ -48,9 +68,8 @@ public class AddressService {
         // Has to be a good response
         try {
             int status = con.getResponseCode();
-            System.out.println("status = " + status);
             if (status > 300){
-                System.out.println("Erreur dans la requete.");
+                System.out.println("Erreur dans la requete status = " + status);
                 throw new ApiException("Issue when validating the address please come back later.", HttpStatus.SERVICE_UNAVAILABLE);
             }
         } catch (IOException e) {

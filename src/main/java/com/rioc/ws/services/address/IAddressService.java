@@ -4,5 +4,6 @@ import com.rioc.ws.models.dto.AddressDto;
 
 public interface IAddressService {
 
-    boolean isValidAddress(AddressDto addressDto);
+    public boolean isValidAddress(AddressDto addressDto);
+
 }
