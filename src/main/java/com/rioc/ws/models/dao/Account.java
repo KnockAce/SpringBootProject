@@ -3,6 +3,7 @@ package com.rioc.ws.models.dao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table (name = "accounts")
@@ -17,6 +18,10 @@ public class Account implements Serializable {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
+
+    // One to many mapping
+//    @OneToMany(mappedBy = "bank_detail", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<BankDetail> bankDetailList;
 
     @Column(name = "first_name")
     private String firstName;

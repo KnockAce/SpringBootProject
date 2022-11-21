@@ -16,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-import static com.rioc.ws.configurations.Default.DEFAULT_ACCOUNT;
-
 @RestController
 public class AccountController
 {

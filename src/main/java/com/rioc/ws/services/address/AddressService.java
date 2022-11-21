@@ -21,6 +21,7 @@ public class AddressService implements IAddressService {
     public boolean isValidAddress(AddressDto addressDto){
         // Minimum
         int minScore = 65;
+        // Get data from api
         JsonNode data = getData(addressDto.getCityName(), addressDto.getZipCode(), addressDto.getStreetAddress());
         System.out.println(data.get("features").size());
         JsonNode features = data.get("features");
