@@ -1,6 +1,8 @@
 package com.rioc.ws.models.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.ColumnTransformer;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -29,6 +31,13 @@ public class Account implements Serializable {
     @Column(name = "last_name")
     private String lastName;
 
+    @ColumnTransformer(
+            read = "cast(AES_DECRYPT(password, 'asecretkey') as char(255))",
+            write = "AES_ENCRYPT(?, 'asecretkey')"
+    )
+    @Column(name = "password")
+    private String password;
+
     public Account() {
 
     }
@@ -44,6 +53,22 @@ public class Account implements Serializable {
         this.address = address;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public Account(int accountId, Address address, String firstName, String lastName, String password) {
+        this.accountId = accountId;
+        this.address = address;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.password = password;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public int getAccountId() {

@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.regex.Pattern;
 
 @Service
 public class BankDetailService implements IBankDetailService {
@@ -25,7 +24,7 @@ public class BankDetailService implements IBankDetailService {
         this.mapper = bankDetailMapper;
         this.accountRepo = accountRepository;
     }
-    // TODO aes 128 cipher pour IBAN numver
+    // TODO aes 128 cipher pour IBAN number
     // TODO hash du password par la suite
     public BankDetailDto postBankDetail(BankDetailDto bankDetailDto) {
         // Check if IBAN number already exists
@@ -48,7 +47,7 @@ public class BankDetailService implements IBankDetailService {
 
     public List<BankDetailDto> getBankDetails(int accountId) {
         // Check if account exists
-        Account account = accountRepo.findById(accountId).orElseThrow(() -> new ApiException("Account not found", HttpStatus.NOT_FOUND));
+        accountRepo.findById(accountId).orElseThrow(() -> new ApiException("Account not found", HttpStatus.NOT_FOUND));
         List<BankDetail> bankDetails = repo.findByAccountId(accountId);
         return bankDetails.stream().map(mapper::bankDetailToDtoBankDetail).toList();
     }

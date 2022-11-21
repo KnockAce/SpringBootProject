@@ -1,6 +1,7 @@
 package com.rioc.ws.models.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rioc.ws.models.AttributeEncryptor;
 import com.rioc.ws.models.dto.AccountDto;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -26,6 +27,7 @@ public class BankDetail implements Serializable {
     @Column(name = "bank_name")
     private String bankName;
 
+    @Convert(converter = AttributeEncryptor.class)
     @Column(name = "account_iban_number")
     private String IBAN;
 

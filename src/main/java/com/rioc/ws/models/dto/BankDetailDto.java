@@ -15,6 +15,6 @@ public class BankDetailDto {
     @ApiModelProperty(notes = "Bank name", example = "Crédit Agricole", required = true)
     private String bankName;
 
-    @ApiModelProperty(notes = "IBAN Number", example = "FR4210096000406235518938V55", required = true)
+    @ApiModelProperty(notes = "IBAN Number", example = "FR7612548029989876543210917", required = true)
     private String IBAN;
 }

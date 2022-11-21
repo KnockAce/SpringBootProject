@@ -33,17 +33,31 @@ public class BankDetailController {
         return new ResponseEntity<>(service.postBankDetail(bankDetailDto), HttpStatus.CREATED);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 202, message = "Successfully obtained all bank details fot the account."),
+            @ApiResponse(code = 404, message = "The account doesn't exist.")
+    })
+    @ApiOperation(value="Get all bank details for an account.")
     @GetMapping("/bankdetails/{accountId}")
     public ResponseEntity<List<BankDetailDto>> getBankDetails(@PathVariable int accountId)
     {
         return new ResponseEntity<>(service.getBankDetails(accountId), HttpStatus.ACCEPTED);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 202, message = "Successfully obtained all bank details.")
+    })
+    @ApiOperation(value="Get all bank details.")
     @GetMapping("/bankdetails")
     public ResponseEntity<List<BankDetail>> getAllBankDetails(){
         return new ResponseEntity<>(service.getAllBankDetail(), HttpStatus.ACCEPTED);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(code = 202, message = "Successfully deleted the account."),
+            @ApiResponse(code = 404, message = "The account doesn't exist.")
+    })
+    @ApiOperation(value="Delete the given bank detail.")
     @DeleteMapping("/bankdetail/{bankDetailId}")
     public ResponseEntity<BankDetail> deleteBankDetail(@PathVariable int bankDetailId)
     {

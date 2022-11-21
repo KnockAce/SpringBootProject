@@ -24,5 +24,7 @@ public class AccountDto {
     @Size(min = 2, max = 40)
     private String lastName;
 
+    private String password;
+
     private AddressDto address;
 }
