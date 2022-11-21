@@ -44,7 +44,7 @@ public class AccountService implements IAccountService {
     }
 
     public Account getAccountById(int idAccount){
-        return repository.getReferenceById(idAccount);
+        return repository.findById(idAccount).orElseThrow(() -> new ApiException("Account not found", HttpStatus.NOT_FOUND));
     }
 
     public Account deleteAccountById(int idAccount) {

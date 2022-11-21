@@ -19,10 +19,16 @@ public class AddressService implements IAddressService {
 
 
     public boolean isValidAddress(AddressDto addressDto){
+        // Minimum
         int minScore = 65;
         JsonNode data = getData(addressDto.getCityName(), addressDto.getZipCode(), addressDto.getStreetAddress());
         System.out.println(data.get("features").size());
         JsonNode features = data.get("features");
+        // check zip code
+        if (!isZipCodeValid(addressDto.getZipCode())){
+            System.out.println("Zip code is not valid.");
+            return false;
+        }
         // No match found
         if (features.size() == 0) {
             System.out.println("No match found.");
@@ -56,6 +62,7 @@ public class AddressService implements IAddressService {
             // We need to encode the street address to avoid special characters and spaces
             apiUrl.append(URLEncoder.encode(street_address + " " + city, StandardCharsets.UTF_8));
             apiUrl.append("&postcode=").append(zipCode); // Add the zip code to the query
+            apiUrl.append("&type=street"); // We only want street
             System.out.println("apiUrl = " + apiUrl);
             url = new URL(apiUrl.toString());
             con = (HttpURLConnection) url.openConnection();
@@ -94,5 +101,10 @@ public class AddressService implements IAddressService {
             e.printStackTrace();
             throw new ApiException("Issue when validating the address please come back later.", HttpStatus.SERVICE_UNAVAILABLE);
         }
+    }
+
+    private boolean isZipCodeValid(int zipCode){
+        String zipcode_regex = "^(?:0[1-9]|[1-8]\\d|9[0-8])\\d{3}$";
+        return String.valueOf(zipCode).matches(zipcode_regex);
     }
 }
