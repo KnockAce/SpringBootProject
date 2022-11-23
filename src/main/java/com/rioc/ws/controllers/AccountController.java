@@ -6,7 +6,6 @@ import com.rioc.ws.models.dto.AccountCreationDto;
 import com.rioc.ws.models.dto.AccountDto;
 import com.rioc.ws.services.account.IAccountService;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;

@@ -125,18 +125,25 @@ Here are a quick summary of the features:
   - Hello World with name
 
 Some features implemented in the project:
-- Check if the account exists before deleting it, updating it or getting it.
-- Check if the bank details exists before deleting it or getting it.
-- Check if the address is existing before creating a new account. With an API.
-- Check if the IBAN number is valid before creating a new bank details.
-- Deleting all bank details and addresses when deleting an account.
-- Encrypting the password, IBAN and address before saving it in the database.
-- Decrypting the password, IBAN and address before getting it from the database.
-- Check if the IBAN number arleaady exists in the database before creating a new bank details.
-- Update the account only if the data has changed.
+- Account **one to one** relationship with address.
+- Account **one to many** relationship with bank details.
+- Bank details **many-to-one** relationship with account.
+- Check if the **account exists** before deleting it, updating it or getting it.
+- Check if the **bank details exists** before deleting it or getting it.
+- Check if the **address is existing** before creating a new account. **With an API**.
+  - Check if the API output data (if the address is existing).
+  - If the address is existing, we check the score and only if the score is greater than 0.65, we create the account.
+- Check if the **IBAN number is valid** before creating a new bank details.
+- Deleting **all bank details and addresses** when deleting an account.
+- **Encrypting** the password, IBAN and address before saving it in the database.
+  - Encrypting the password with **Cipher**(AES 128).
+- **Decrypting** the password, IBAN and address before getting it from the database.
+  - Decrypting the password with **Cipher**(AES 128).
+- Check if the **IBAN number already exists** in the database before creating a new bank details.
+- Update the account only **if the data has changed**.
 - Documentation and examples with Swagger.
-- Output the password only when creating or updating an account.
-- Validate the data before creating or updating an account.
+- Output the password only when **creating or updating** an account.
+- **Validate the data** before creating or updating an account.
 
 ## Troubleshooting
 
@@ -145,6 +152,8 @@ Some features implemented in the project:
 ```bash
 mvn clean install -DskipTests
 ```
+
+Feel free to open an issue if you have any questions or problems.
 
 ## Contributing
 

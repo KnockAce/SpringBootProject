@@ -54,9 +54,7 @@ public class AccountService implements IAccountService {
     }
 
     public Account deleteAccountById(int idAccount) {
-        Account account = repository.findById(idAccount).orElse(null);
-        if (account == null)
-            throw new ApiException("The account doesn't exist.", HttpStatus.NOT_FOUND);
+        Account account = repository.findById(idAccount).orElseThrow(() -> new ApiException("Account not found", HttpStatus.NOT_FOUND));
         repository.deleteById(idAccount);
         return account;
     }
