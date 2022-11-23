@@ -55,8 +55,6 @@ spring.datasource.password = root
 5. If not run the following command to start the MySQL database (in the project root directory):
 
 ```bash
-
-```bash
 docker-compose up -d
 ```
 6. Create the database:
