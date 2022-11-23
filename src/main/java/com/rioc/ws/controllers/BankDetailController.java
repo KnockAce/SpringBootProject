@@ -24,7 +24,7 @@ public class BankDetailController {
 
     @ApiResponses(value = {
             @ApiResponse(code = 201, message = "Successfully created a bank detail for the given account."),
-            @ApiResponse(code = 400, message = "Error while creating bank detail.")
+            @ApiResponse(code = 403, message = "Input data is not correct.")
     })
     @ApiOperation(value = "Create a bank detail.", notes = "Created a bank detail for the given account.")
     @PostMapping("/bankdetail")
@@ -62,5 +62,16 @@ public class BankDetailController {
     public ResponseEntity<BankDetail> deleteBankDetail(@PathVariable int bankDetailId)
     {
         return new ResponseEntity<>(service.deleteBankDetail(bankDetailId), HttpStatus.ACCEPTED);
+    }
+
+    @ApiResponses(value = {
+            @ApiResponse(code = 202, message = "Successfully deleted the account."),
+            @ApiResponse(code = 404, message = "The account doesn't exist.")
+    })
+    @ApiOperation(value="Get a bank detail by id.")
+    @GetMapping("/bankdetail/{bankDetailId}")
+    public ResponseEntity<BankDetail> getBankDetailById(@PathVariable int bankDetailId)
+    {
+        return new ResponseEntity<>(service.getBankDetailById(bankDetailId), HttpStatus.ACCEPTED);
     }
 }

@@ -1,7 +1,10 @@
 package com.rioc.ws.models.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,12 +21,14 @@ public class Account implements Serializable {
 
     // One to one mapping
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "address_id", referencedColumnName = "address_id")
     private Address address;
 
     // One to many mapping
-//    @OneToMany(mappedBy = "bank_detail", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<BankDetail> bankDetailList;
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<BankDetail> bankDetailList;
 
     @Column(name = "first_name")
     private String firstName;
@@ -101,5 +106,13 @@ public class Account implements Serializable {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public List<BankDetail> getBankDetailList() {
+        return bankDetailList;
+    }
+
+    public void setBankDetailList(List<BankDetail> bankDetailList) {
+        this.bankDetailList = bankDetailList;
     }
 }

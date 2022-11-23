@@ -8,12 +8,13 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
 
-
-@Data @NoArgsConstructor @AllArgsConstructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class AccountDto {
+public class AccountCreationDto {
+    // This is used when we create a new account.
 
     @ApiModelProperty(notes = "Firstname", example = "James", required = true)
     @NotBlank(message = "Account name cannot be blank")
@@ -25,7 +26,10 @@ public class AccountDto {
     @Size(min = 2, max = 40)
     private String lastName;
 
-    private AddressDto address;
+    @ApiModelProperty(notes = "Password", example = "my_password", required = true)
+    @Size(min = 4, max = 40)
+    @NotBlank(message = "Last name cannot be blank")
+    private String password;
 
-    private List<BankDetailDto> bankDetailList;
+    private AddressDto address;
 }

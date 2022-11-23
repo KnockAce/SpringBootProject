@@ -2,6 +2,7 @@ package com.rioc.ws.controllers;
 
 import com.rioc.ws.exceptions.ApiException;
 import com.rioc.ws.models.dao.Account;
+import com.rioc.ws.models.dto.AccountCreationDto;
 import com.rioc.ws.models.dto.AccountDto;
 import com.rioc.ws.services.account.IAccountService;
 import io.swagger.annotations.ApiOperation;
@@ -33,7 +34,7 @@ public class AccountController
     })
     @ApiOperation(value = "Create an account", notes = "Create an account with the given information")
     @PostMapping("/account")
-    public ResponseEntity<AccountDto> postAccount (@Valid @RequestBody AccountDto account, BindingResult bindingResult)
+    public ResponseEntity<AccountCreationDto> postAccount (@Valid @RequestBody AccountCreationDto account, BindingResult bindingResult)
     {
         if (bindingResult.hasErrors()) {
             System.out.println("La data n'est pas valide.");
@@ -79,7 +80,7 @@ public class AccountController
     })
     @ApiOperation(value = "Update an account", notes = "Update an account with the given id.")
     @PutMapping("/account/{idAccount}")
-    public ResponseEntity<Account> updateAccount(@Valid @RequestBody AccountDto account,
+    public ResponseEntity<AccountCreationDto> updateAccount(@Valid @RequestBody AccountCreationDto account,
                                                     @PathVariable int idAccount, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             System.out.println("La data n'est pas valide.");
@@ -95,7 +96,7 @@ public class AccountController
     })
     @ApiOperation(value = "Create many accounts", notes = "Create many accounts with the given information.")
     @PostMapping("/accounts")
-    public ResponseEntity<List<AccountDto>> addManyAccounts(@Valid @RequestBody List<AccountDto> accounts, BindingResult bindingResult){
+    public ResponseEntity<List<AccountCreationDto>> addManyAccounts(@Valid @RequestBody List<AccountCreationDto> accounts, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             System.out.println("La data n'est pas valide.");
             throw new ApiException("The input data is not correct.", HttpStatus.BAD_REQUEST);

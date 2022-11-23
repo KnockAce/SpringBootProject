@@ -1,6 +1,7 @@
 package com.rioc.ws.models.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.rioc.ws.models.AttributeEncryptor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,15 +15,18 @@ public class Address implements Serializable {
     @Column(name = "address_id", unique = true, nullable = false)
     private int addressId;
 
+    @Convert(converter = AttributeEncryptor.class)
     @Column(name = "city_name", nullable = false)
     private String cityName;
 
+    @Convert(converter = AttributeEncryptor.class)
     @Column(name = "street_address", nullable = false)
     private String streetAddress;
 
     @Column(name = "zip_code", nullable = false)
     private int zipCode;
 
+    @Convert(converter = AttributeEncryptor.class)
     @Column(name = "country", nullable = false)
     private String country;
 

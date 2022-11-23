@@ -24,18 +24,16 @@ public class BankDetailService implements IBankDetailService {
         this.mapper = bankDetailMapper;
         this.accountRepo = accountRepository;
     }
-    // TODO aes 128 cipher pour IBAN number
-    // TODO hash du password par la suite
+
     public BankDetailDto postBankDetail(BankDetailDto bankDetailDto) {
         // Check if IBAN number already exists
-        if (repo.findByIBAN(bankDetailDto.getIBAN()).size() > 0) {
+        if (repo.findByIBAN(bankDetailDto.getIban()).size() > 0) {
             throw new ApiException("IBAN number already exist.", HttpStatus.BAD_REQUEST);
         }
         // Validate the IBAN number
-        if (!validateIBAN(bankDetailDto.getIBAN())) {
+        if (!validateIBAN(bankDetailDto.getIban())) {
             throw new ApiException("Invalid IBAN number.", HttpStatus.BAD_REQUEST);
         }
-
         BankDetail bankDetail = mapper.bankDetailDtoToBankDetail(bankDetailDto);
         // Check if account exists
         Account account = accountRepo.findById(bankDetailDto.getAccountId()).orElseThrow(() -> new ApiException("Account not found", HttpStatus.NOT_FOUND));
@@ -59,7 +57,14 @@ public class BankDetailService implements IBankDetailService {
     }
 
     public List<BankDetail> getAllBankDetail(){
-        return repo.findAll();
+        System.out.println(repo.findAll());
+        List<BankDetail> bankDetails = repo.findAll();
+        bankDetails.forEach(bankDetail -> System.out.println(bankDetail.getAccount()));
+        return bankDetails;
+    }
+
+    public BankDetail getBankDetailById(int bankDetailId) {
+        return repo.findById(bankDetailId).orElseThrow(() -> new ApiException("Bank detail not found", HttpStatus.NOT_FOUND));
     }
 
     private boolean validateIBAN(String iban) {

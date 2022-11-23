@@ -10,4 +10,5 @@ public interface IBankDetailService {
     public List<BankDetailDto> getBankDetails(int accountId);
     public BankDetail deleteBankDetail(int bankDetailId);
     List<BankDetail> getAllBankDetail();
+    public BankDetail getBankDetailById(int bankDetailId);
 }

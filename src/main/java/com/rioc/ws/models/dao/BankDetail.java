@@ -1,8 +1,8 @@
 package com.rioc.ws.models.dao;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.rioc.ws.models.AttributeEncryptor;
-import com.rioc.ws.models.dto.AccountDto;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -19,6 +19,7 @@ public class BankDetail implements Serializable {
     @Column(name = "bank_detail_id", unique = true, nullable = false)
     private int id;
 
+    @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
